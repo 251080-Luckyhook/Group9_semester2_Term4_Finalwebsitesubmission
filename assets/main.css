@@ -1,4 +1,4 @@
-<style>
+
 .movie-list {
   display: flex;
   gap: 20px;
@@ -29,4 +29,3 @@
 .movie-info h2 {
   margin: 0 0 8px 0;
 }
-</style>
