@@ -1,230 +1,692 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="#" type="image/x-icon">
-    <title>Home | Movie Ratings</title>
-    <style>
-        .navbar {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          background: #222;
-          padding: 12px 24px;
-          margin-bottom: 32px;
-          border-radius: 8px;
-        }
-        .navbar-logo {
-          width: 60px;
-          height: 40px;
-          background: #444;
-          color: #bbb;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 18px;
-          border-radius: 4px;
-        }
-        .navbar-logo::after {
-          content: "Logo";
-        }
-        .navbar-links {
-          list-style: none;
-          display: flex;
-          gap: 32px;
-          margin: 0;
-          padding: 0;
-        }
-        .navbar-links li a {
-          color: #fff;
-          text-decoration: none;
-          font-size: 16px;
-          padding: 6px 12px;
-          border-radius: 4px;
-          transition: background 0.2s;
-        }
-        .navbar-links li a:hover {
-          background: #444;
-        }
-        .navbar-search {
-          width: 180px;
-          height: 40px;
-          background: #eee;
-          color: #888;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 16px;
-          border-radius: 6px;
-          border: 1px solid #ccc;
-          margin-left: 32px;
-        }
-        .navbar-search::after {
-          content: "Search";
-        }
-        .navbar-profile {
-          width: 40px;
-          height: 40px;
-          background: #444;
-          color: #bbb;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 16px;
-          border-radius: 50%;
-        }
-        .navbar-profile::after {
-          content: "Profile";
-        }
-        .movie-list {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 32px;
-          justify-content: center;
-          margin: 0 auto;
-          max-width: 900px;
-        }
-        .movie-card {
-          border: 1px solid #ccc;
-          padding: 16px;
-          background: #f9f9f9;
-          border-radius: 8px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-        .movie-poster-placeholder {
-          width: 100%;
-          height: 150px;
-          background: #ddd;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #888;
-          font-size: 18px;
-          margin-bottom: 12px;
-          border-radius: 4px;
-        }
-        .movie-poster-placeholder::after {
-          content: "Poster";
-        }
-        .movie-info h2 {
-          margin: 0 0 8px 0;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Home | Movie Ratings</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/main.css">
+  <style>
+    body{
+      margin:0;
+      min-height:100vh;
+      color: #e6f0fb;
+      background: linear-gradient(180deg, #081a2b 0%, #02121b 100%);
+    }
+    .navbar.custom{
+      background: linear-gradient(90deg,#021025 0%, #04122a 100%);
+      border-bottom:1px solid rgba(255,255,255,0.03);
+      padding:10px 18px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-sizing:border-box;
+    }
+    .navbar-logo{
+      width:64px;
+      height:44px;
+      border-radius:8px;
+      background:linear-gradient(180deg,#071428,#021922);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      font-weight:700;
+      flex:0 0 auto;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .navbar-center{
+      flex:1 1 auto;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      pointer-events:auto;
+    }
+
+    .navbar-links{list-style:none;margin:0;padding:0;display:flex;gap:18px;align-items:center}
+    .navbar-links li{margin:0}
+    .navbar-links a{
+      color:#ffffff;
+      text-decoration:none;
+      padding:8px 12px;
+      border-radius:8px;
+      display:inline-block;
+      transition:all .12s;
+      font-weight:500;
+    }
+    .navbar-links a:hover,
+    .navbar-links .active a{
+      background:rgba(255,255,255,0.02);
+      color:#ffffff;
+      transform:translateY(-1px);
+    }
+
+    .navbar-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex:0 0 auto;
+    }
+
+    .navbar-search{
+      min-width:180px;
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.03);
+      color:#ffffff;
+      height:38px;
+      padding:6px 10px;
+      border-radius:8px;
+    }
+    .navbar-search::placeholder{ color: rgba(255,255,255,0.6); }
+
+    .navbar-profile{
+      width:40px;height:40px;border-radius:50%;
+      background:linear-gradient(180deg,#05212a,#02161b);
+      display:flex;align-items:center;justify-content:center;
+      color:#ffffff;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .carousel-caption h5,
+    .carousel-caption p {
+      color: #ffffff !important;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+    }
+
+    .carousel-container{
+      max-width:1100px;
+      margin:18px auto 28px;
+      padding:0 16px;
+    }
+    .carousel .carousel-item,
+    .carousel .carousel-item img {
+      height:75vh; /* ~75% of viewport height */
+    }
+    .carousel .carousel-item img {
+      object-fit: cover;
+      width:100%;
+      display:block;
+    }
+    .carousel-caption{
+      bottom:20px;
+      left:16px;
+      right:16px;
+      text-align:left;
+    }
+    .carousel-caption h5{ font-size:1.25rem; margin:0 0 6px }
+    .carousel-caption p{ font-size:1rem; margin:0 }
+    .movie-list{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 24px;
+      max-width:1200px;
+      margin: 0 auto 40px;
+      padding: 0 16px;
+      box-sizing: border-box;
+    }
+    .movie-card{
+      background: linear-gradient(180deg,#07142800,#071428);
+      border-radius:10px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,0.04);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      min-height:320px;
+      box-sizing:border-box;
+    }
+
+    .movie-poster-placeholder{
+      width:100%;
+      height:220px;
+      background:#0b2a34;
+      border-radius:8px;
+      overflow:hidden;
+      display:block;
+    }
+    .movie-poster-placeholder img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+    .movie-info h2{ margin:0; font-size:18px; color:#eaf6f2 }
+    .movie-info p{ margin:6px 0; color:rgba(234,246,242,0.86); font-size:14px }
+    @media (max-width: 1000px){
+      .movie-list{ grid-template-columns: repeat(2, minmax(0,1fr)); max-width:900px; }
+      .movie-poster-placeholder{ height:180px }
+      .movie-card{ min-height:280px }
+    }
+    @media (max-width: 600px){
+      .movie-list{ grid-template-columns: 1fr; max-width:98vw; padding:0 8px }
+      .carousel .carousel-item,
+      .carousel .carousel-item img { height:45vh; }
+      .movie-poster-placeholder{ height:160px }
+      .movie-card{ min-height:240px }
+    }
+    @media (max-width: 900px){
+      .navbar-center{display:none}
+    }
+    .site-footer{
+      position:relative;
+      background: linear-gradient(180deg,#02121a 0%, #031827 100%);
+      color: rgba(234,246,242,0.92);
+      border-top:1px solid rgba(255,255,255,0.03);
+      padding: 32px 18px 18px;
+      box-sizing: border-box;
+      margin-top: 28px;
+    }
+
+    .site-footer .footer-inner{
+      max-width:1200px;
+      margin:0 auto;
+      display:flex;
+      gap:24px;
+      justify-content:space-between;
+      align-items:flex-start;
+      flex-wrap:wrap;
+      padding:0 16px;
+    }
+
+    .footer-left, .footer-middle, .footer-right{
+      min-width: 220px;
+    }
+
+    .footer-logo{
+      width:56px;
+      height:40px;
+      border-radius:8px;
+      background:linear-gradient(180deg,#071428,#021922);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ffffff;
+      font-weight:700;
+      border:1px solid rgba(255,255,255,0.03);
+      flex-shrink:0;
+    }
+
+    .footer-brand{ color: #eaf6f2; font-weight:700; line-height:1; }
+    .footer-brand small{ display:block; color:rgba(234,246,242,0.7); font-weight:500; }
+
+    .footer-col h6{
+      margin:0 0 8px 0;
+      color:#ffffff;
+      font-size:14px;
+      letter-spacing:0.2px;
+    }
+    .footer-col p, .footer-col a, .footer-contact {
+      margin:0;
+      color:rgba(234,246,242,0.78);
+      font-size:14px;
+      line-height:1.5;
+      text-decoration:none;
+    }
+    .footer-contact a{ color:var(--accent); text-decoration:none; }
+
+    .social-links{ display:flex; gap:12px; margin-top:6px; }
+    .social-icon{ display:inline-flex; width:36px; height:36px; align-items:center; justify-content:center; border-radius:8px; background:transparent; border:1px solid rgba(255,255,255,0.03); transition:transform .12s, background .12s; }
+    .social-icon svg{ width:18px; height:18px; fill:#ffffff; opacity:0.9; }
+    .social-icon:hover{ transform:translateY(-4px); background:rgba(255,255,255,0.02); }
+
+    .footer-bottom{
+      max-width:1200px;
+      margin:16px auto 0;
+      padding:12px 16px 0;
+      color:rgba(234,246,242,0.66);
+      font-size:13px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .footer-bottom a{ color:rgba(234,246,242,0.9); text-decoration:none; }
+    .footer-bottom a:hover{ text-decoration:underline; }
+
+    .sections-container{
+      max-width:1100px;
+      margin: 0 auto 28px;
+      padding: 0 16px;
+      display:flex;
+      flex-direction:column;
+      gap:22px;
+      box-sizing:border-box;
+    }
+    .section{
+      background:transparent;
+    }
+    .section-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+    .section-title{
+      color:#eaf6f2;
+      font-size:1.15rem;
+      font-weight:700;
+      margin:0;
+    }
+    .section-sub{
+      color:rgba(234,246,242,0.7);
+      font-size:0.95rem;
+      margin:0;
+    }
+    .section-cards{
+      display:flex;
+      gap:16px;
+      overflow-x:auto;
+      padding:12px 4px;
+    }
+    .section-cards::-webkit-scrollbar{ height:8px; }
+    .section-card{
+      min-width:200px;
+      max-width:220px;
+      background:linear-gradient(180deg,#07142800,#071428);
+      border-radius:10px;
+      padding:8px;
+      border:1px solid rgba(255,255,255,0.04);
+      flex:0 0 auto;
+    }
+    .section-card img{ width:100%; height:120px; object-fit:cover; border-radius:6px; display:block; }
+    .section-card h4{ margin:8px 0 6px 0; font-size:1rem; color:#eaf6f2; }
+    .section-card p{ margin:0; font-size:0.9rem; color:rgba(234,246,242,0.82); }
+    .view-all{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.04);
+      color:#eaf6f2;
+      padding:6px 10px;
+      border-radius:8px;
+      font-size:0.9rem;
+      text-decoration:none;
+    }
+
+    @media (max-width:700px){
+      .section-card{ min-width:160px; }
+    }
+    .local-filter { display:inline-flex; gap:8px; align-items:center; }
+    .local-filter .filter-btn{
+      padding: 8px 14px;
+      font-size: 1rem;
+      border-radius: 10px;
+      min-width: 88px;
+      height: 40px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .local-filter .filter-btn.active{
+      transform: translateY(-1px);
+    }
+  </style>
 </head>
 <body>
 
-<nav class="navbar">
-  <div class="navbar-logo">
-    <!-- Logo Placeholder -->
-  </div>
-  <ul class="navbar-links">
-    <li class="active"><a href="index.html">Home</a></li>
-    <li><a href="Pages/Movies.html">Movies</a></li>
-    <li><a href="#">Contact</a></li>
-  </ul>
-  <div class="navbar-search">
-    <!-- Search Placeholder -->
-  </div>
-  <div class="navbar-profile">
-    <!-- Profile Placeholder -->
-  </div>
-</nav>
+<nav class="navbar custom">
+    <div class="navbar-logo">MR</div>
 
-<div class="movie-list">
-  <div class="movie-card">
-    <div class="movie-poster-placeholder">
-      <!-- Poster Placeholder -->
+    <div class="navbar-center">
+      <ul class="navbar-links">
+        <li><a class="active" href="index.html">Home</a></li>
+        <li><a href="Pages/Movies.html">Movies</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
     </div>
-    <div class="movie-info">
-      <h2>Movie Title 1</h2>
-      <p>Rating: *****</p>
-      <p>Description: This is a short description of Movie Title 1. It is an exciting film with a great storyline.</p>
+
+    <div class="navbar-right">
+      <input id="globalSearch" name="search" class="form-control form-control-sm navbar-search" type="search" placeholder="Search movies" aria-label="Search">
+      <div class="navbar-profile">U</div>
     </div>
+  </nav>
+
+<div class="carousel-container">
+  <div id="homeCarousel" class="carousel slide carousel-dark" data-bs-ride="carousel" data-bs-interval="4500" aria-label="Homepage highlights">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+      <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+    </div>
+
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="d-block w-100" style="height:75vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#0b2a34,#02121b);">
+          <div class="carousel-caption d-none d-md-block" style="position:static;transform:none;">
+            <h5 style="color:#fff;margin:0;font-weight:700">Featured — Placeholder 1</h5>
+            <p style="color:rgba(255,255,255,0.85);margin:6px 0 0">This is a filler slide. Replace with real content later.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <div class="d-block w-100" style="height:75vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#081a2b,#031827);">
+          <div class="carousel-caption d-none d-md-block" style="position:static;transform:none;">
+            <h5 style="color:#fff;margin:0;font-weight:700">Featured — Placeholder 2</h5>
+            <p style="color:rgba(255,255,255,0.85);margin:6px 0 0">Simple filler content for the carousel slide.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <div class="d-block w-100" style="height:75vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#05212a,#02161b);">
+          <div class="carousel-caption d-none d-md-block" style="position:static;transform:none;">
+            <h5 style="color:#fff;margin:0;font-weight:700">Featured — Placeholder 3</h5>
+            <p style="color:rgba(255,255,255,0.85);margin:6px 0 0">Placeholder text — update when data is available.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <div class="d-block w-100" style="height:75vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#071428,#021922);">
+          <div class="carousel-caption d-none d-md-block" style="position:static;transform:none;">
+            <h5 style="color:#fff;margin:0;font-weight:700">Featured — Placeholder 4</h5>
+            <p style="color:rgba(255,255,255,0.85);margin:6px 0 0">Filler slide — use TMDB data to populate later.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <div class="d-block w-100" style="height:75vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#02121b,#04122a);">
+          <div class="carousel-caption d-none d-md-block" style="position:static;transform:none;">
+            <h5 style="color:#fff;margin:0;font-weight:700">Featured — Placeholder 5</h5>
+            <p style="color:rgba(255,255,255,0.85);margin:6px 0 0">Final filler slide — swap with dynamic content when ready.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev" aria-label="Previous slide">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+
+    <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next" aria-label="Next slide">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
   </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder">
-      <!-- Poster Placeholder -->
-    </div>
-    <div class="movie-info">
-      <h2>Movie Title 2</h2>
-      <p>Rating: *****</p>
-      <p>Description: This is a short description of Movie Title 2. It offers a unique perspective and engaging characters.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder">
-      <!-- Poster Placeholder -->
-    </div>
-    <div class="movie-info">
-      <h2>Movie Title 3</h2>
-      <p>Rating:*****</p>
-      <p>Description: This is a short description of Movie Title 3. A must-watch for fans of the genre.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder">
-      <!-- Poster Placeholder -->
-    </div>
-    <div class="movie-info">
-      <h2>Movie Title 4</h2>
-      <p>Rating: *****</p>
-      <p>Description: This is a short description of Movie Title 4. A thrilling adventure with stunning visuals.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder">
-      <!-- Poster Placeholder -->
-    </div>
-    <div class="movie-info">
-      <h2>Movie Title 5</h2>
-      <p>Rating: *****</p>
-      <p>Description: This is a short description of Movie Title 5. A heartwarming story with memorable characters.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder">
-      <!-- Poster Placeholder -->
-    </div>
-    <div class="movie-info">
-      <h2>Movie Title 6</h2>
-      <p>Rating: *****</p>
-      <p>Description: This is a short description of Movie Title 6. An action-packed film with a gripping plot.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder">
-      <!-- Poster Placeholder -->
-    </div>
-    <div class="movie-info">
-      <h2>Movie Title 7</h2>
-      <p>Rating: *****</p>
-      <p>Description: This is a short description of Movie Title 7. A comedy that will keep you laughing throughout.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder">
-      <!-- Poster Placeholder -->
-    </div>
-    <div class="movie-info">
-      <h2>Movie Title 8</h2>
-      <p>Rating: *****</p>
-      <p>Description: This is a short description of Movie Title 8. A dramatic tale with powerful performances.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder">
-      <!-- Poster Placeholder -->
-    </div>
-    <div class="movie-info">
-      <h2>Movie Title 9</h2>
-      <p>Rating: *****</p>
-      <p>Description: This is a short description of Movie Title 9. A suspenseful mystery that keeps you guessing.</p>
+</div>
+
+<div class="sections-container" style="max-width:1100px;margin:0 auto 18px;padding:0 16px;">
+  <div style="display:flex;gap:10px;align-items:center;">
+    <div style="color:#eaf6f2;font-weight:700;margin-right:8px">Quick filter:</div>
+    <div role="tablist" aria-label="Filter movies" class="local-filter">
+      <button class="btn btn-sm btn-outline-light filter-btn active" data-filter="all" aria-pressed="true">All</button>
+      <button class="btn btn-sm btn-outline-light filter-btn" data-filter="top-rated">Top Rated</button>
+      <button class="btn btn-sm btn-outline-light filter-btn" data-filter="fan-fav">Fan Fav</button>
+      <button class="btn btn-sm btn-outline-light filter-btn" data-filter="might-like">Might Like</button>
     </div>
   </div>
 </div>
+
+<div class="movie-list" id="homeMovieList">
+
+  <div class="movie-card" data-category="top-rated">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m1/400/240" alt="poster" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 1</h2>
+      <p>Rating: *****</p>
+      <p>Description: An exciting film with a great storyline and memorable characters.</p>
+    </div>
+  </div>
+
+  <div class="movie-card" data-category="fan-fav">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m2/400/240" alt="poster" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 2</h2>
+      <p>Rating: *****</p>
+      <p>Description: A compelling drama with excellent performances.</p>
+    </div>
+  </div>
+
+  <div class="movie-card" data-category="might-like">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m3/400/240" alt="poster" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 3</h2>
+      <p>Rating: *****</p>
+      <p>Description: A solid watch for fans of the genre.</p>
+    </div>
+  </div>
+
+  <div class="movie-card" data-category="top-rated">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m4/400/240" alt="poster" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 4</h2>
+      <p>Rating: *****</p>
+      <p>Description: Critically acclaimed and audience favorite.</p>
+    </div>
+  </div>
+
+  <div class="movie-card" data-category="fan-fav">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m5/400/240" alt="poster" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 5</h2>
+      <p>Rating: *****</p>
+      <p>Description: Stylish direction and great soundtrack.</p>
+    </div>
+  </div>
+
+  <div class="movie-card" data-category="top-rated">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m6/400/240" alt="poster 6" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 6</h2>
+      <p>Rating: *****</p>
+      <p>Description: Experimental piece with mixed reviews.</p>
+    </div>
+  </div>
+
+  <div class="movie-card" data-category="top-rated">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m7/400/240" alt="poster 7" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 7</h2>
+      <p>Rating: *****</p>
+      <p>Description: Heartfelt story and strong performances.</p>
+    </div>
+  </div>
+
+  <div class="movie-card" data-category="fan-fav">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m8/400/240" alt="poster 8" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 8</h2>
+      <p>Rating: *****</p>
+      <p>Description: Fun, entertaining and visually pleasing.</p>
+    </div>
+  </div>
+
+  <div class="movie-card" data-category="might-like">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m9/400/240" alt="poster 9" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 9</h2>
+      <p>Rating: *****</p>
+      <p>Description: A gripping thriller with twists.</p>
+    </div>
+  </div>
+
+  <div class="movie-card" data-category="top-rated">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m10/400/240" alt="poster 10" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 10</h2>
+      <p>Rating: *****</p>
+      <p>Description: Light-hearted and fun.</p>
+    </div>
+  </div>
+
+  <div class="movie-card" data-category="fan-fav">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m11/400/240" alt="poster 11" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 11</h2>
+      <p>Rating: *****</p>
+      <p>Description: Strong script and pacing.</p>
+    </div>
+  </div>
+
+  <div class="movie-card" data-category="might-like">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m12/400/240" alt="poster 12" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 12</h2>
+      <p>Rating: *****</p>
+      <p>Description: Niche appeal but interesting ideas.</p>
+    </div>
+  </div>
+
+  <div class="movie-card" data-category="top-rated">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m13/400/240" alt="poster 13" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 13</h2>
+      <p>Rating: *****</p>
+      <p>Description: Atmospheric and well-acted.</p>
+    </div>
+  </div>
+
+  <div class="movie-card" data-category="fan-fav">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m14/400/240" alt="poster 14" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 14</h2>
+      <p>Rating: *****</p>
+      <p>Description: Engaging concept, solid execution.</p>
+    </div>
+  </div>
+
+  <div class="movie-card" data-category="might-like">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m15/400/240" alt="poster 15" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 15</h2>
+      <p>Rating: *****</p>
+      <p>Description: Great visuals and soundtrack.</p>
+    </div>
+  </div>
+
+  <div class="movie-card">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m16/400/240" alt="poster 16" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 16</h2>
+      <p>Rating: *****</p>
+      <p>Description: Bold choices, mixed reception.</p>
+    </div>
+  </div>
+
+  <div class="movie-card">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m17/400/240" alt="poster 17" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 17</h2>
+      <p>Rating: *****</p>
+      <p>Description: Good pacing and enjoyable scenes.</p>
+    </div>
+  </div>
+
+  <div class="movie-card">
+    <div class="movie-poster-placeholder"><img src="https://picsum.photos/seed/m18/400/240" alt="poster 18" style="width:100%;height:100%;object-fit:cover;border-radius:6px"></div>
+    <div class="movie-info">
+      <h2>Movie Title 18</h2>
+      <p>Rating: *****</p>
+      <p>Description: Well-reviewed and crowd-pleasing.</p>
+    </div>
+  </div>
+</div>
+
+<div class="sections-container" aria-label="Featured sections">
+  <section class="section" id="top-rated">
+  </section>
+
+  <section class="section" id="newly-added">
+  </section>
+
+  <section class="section" id="popular">
+  </section>
+</div>
+
+<section id="moviesPage" class="container" style="max-width:1200px;margin:24px auto;padding:0 16px;display:none;" aria-label="All movies">
+  <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <h1 style="margin:0;color:#eaf6f2">All Movies</h1>
+    <div style="color:var(--muted)">Browse the full catalogue</div>
+  </header>
+
+  <div id="movieList" class="movie-list" aria-live="polite"></div>
+
+  <div style="display:flex;justify-content:center;margin:18px 0;">
+    <button id="loadMoreMovies" class="btn btn-primary">Load more</button>
+  </div>
+</section>
+
+<!-- footer (sticky) -->
+<footer class="site-footer" aria-label="Site footer">
+  <div class="footer-inner">
+  </div>
+
+  <div class="footer-bottom">
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+  });
+</script>
+
+<script src="js/movieApi.js"></script>
+
+
+<script>
+  (function () {
+    // Wait until movieApi is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+      const moviesPage = document.getElementById('moviesPage');
+      if (!moviesPage) return;
+
+      moviesPage.style.display = 'block';
+
+      const list = document.getElementById('movieList');
+      const loadBtn = document.getElementById('loadMoreMovies');
+      let page = 1;
+      const pageSize = 20; 
+      let accumulated = [];
+      let totalAvailable = Infinity;
+      let loading = false;
+
+      async function loadPage() {
+        if (loading) return;
+        loading = true;
+        loadBtn.disabled = true;
+        loadBtn.textContent = 'Loading...';
+
+        try {
+        
+          const res = await window.MovieApi.fetchMovies({ page, limit: pageSize });
+          const movies = res.movies || [];
+          // accumulate and render
+          accumulated = accumulated.concat(movies);
+          window.MovieApi.renderMovies(list, accumulated);
+
+          // update counters
+          totalAvailable = res.total || totalAvailable;
+          page += 1;
+          if (!movies.length || accumulated.length >= totalAvailable) {
+            loadBtn.style.display = 'none';
+          } else {
+            loadBtn.disabled = false;
+            loadBtn.textContent = 'Load more';
+          }
+        } catch (err) {
+          console.error('Failed to load movies page', err);
+          loadBtn.disabled = false;
+          loadBtn.textContent = 'Load more';
+          alert('Failed to load movies. See console for details.');
+        } finally {
+          loading = false;
+        }
+      }
+
+      loadBtn.addEventListener('click', loadPage);
+
+      
+      (async () => {
+
+        await loadPage();
+        await loadPage();
+        await loadPage();
+      })();
+    });
+  })();
+</script>
 
 </body>
 </html>

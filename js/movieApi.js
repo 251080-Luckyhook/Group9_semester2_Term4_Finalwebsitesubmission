@@ -1,6 +1,7 @@
 
 
-const API_BASE = 'https://www.themoviedb.org/'; 
+const API_BASE = 'https://www.themoviedb.org/'; // local backend base (use '' so '/movies' calls go to your site). Change if you have a remote backend.
+const AUTH_TOKEN_KEY = 'authToken'; 
 
 async function apiFetch(path, options = {}) {
     const url = `${API_BASE}${path}`;
@@ -24,8 +25,8 @@ async function apiFetch(path, options = {}) {
 }
 
 // API functions
-async function fetchMovies({ query = '', page = 1, limit = 20 } = {}) {
-  
+async function fetchMovies({ query = '', page = 1, limit = 100 } = {}) { // changed default limit -> 100
+    // Prefer TMDB endpoints: search when query provided, otherwise fetch popular
     if (query && String(query).trim()) {
         const res = await tmdbSearchMovies(query, { page });
         return { movies: res.movies || [], page: res.page || 1, total: res.total || 0 };
@@ -102,7 +103,7 @@ function tmdbGetImageUrl(path, size = 'w500') {
 }
 
 function mapTmdbToMovie(tmdb) {
-    
+    // minimal mapping to shape used by the app: { id, title, year, poster, avgRating, ratingCount, description }
     return {
         id: `tmdb_${tmdb.id}`,
         title: tmdb.title || tmdb.name || '',
@@ -148,8 +149,9 @@ async function tmdbGetTopRated({ page = 1 } = {}) {
     };
 }
 
+
 function createMovieCard(movie) {
-)
+  
     const div = document.createElement('div');
     div.className = 'movie-card';
     div.dataset.movieId = movie.id;
@@ -167,15 +169,15 @@ function createMovieCard(movie) {
     `;
     return div;
 }
- h2)
+
 function createMovieCardForHome(movie) {
     const div = document.createElement('div');
     div.className = 'movie-card';
-
+    // Add a category so the quick-filter can still operate (set to 'popular' by default)
     div.dataset.category = 'popular';
     div.dataset.movieId = movie.id;
 
-    const rating5 = movie.avgRating ? (Number(movie.avgRating) / 2) : null; 
+    const rating5 = movie.avgRating ? (Number(movie.avgRating) / 2) : null; // TMDB uses 0-10; convert to 0-5
     const ratingText = rating5 ? `${rating5.toFixed(1)}*` : 'N/A';
 
     div.innerHTML = `
@@ -194,9 +196,9 @@ function createMovieCardForHome(movie) {
 function createMovieCardForMoviesPage(movie) {
     const art = document.createElement('article');
     art.className = 'movie-card';
-    
+    // provide attributes used by the Movies page filter/sort
     const rating5 = movie.avgRating ? (Number(movie.avgRating) / 2) : 0;
-    art.dataset.genre = (movie.genre || '').toLowerCase(); 
+    art.dataset.genre = (movie.genre || '').toLowerCase(); // genre not available from TMDB mapping here; left blank or you can map ids
     art.dataset.rating = rating5 ? Number(rating5.toFixed(1)) : 0;
     art.dataset.year = movie.year || '';
     art.dataset.title = movie.title || '';
@@ -235,27 +237,109 @@ function renderMovies(container, movies = []) {
     container.appendChild(frag);
 }
 
-async function populateMainGrids({ page = 1, limit = 18, homeLimit = 6 } = {}) {
+function populateBestCarousel(movies = [], containerId = 'bestCarousel') {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    if (!movies.length) {
+        container.innerHTML = '<p>No featured movies.</p>';
+        return;
+    }
+
+    const track = document.createElement('div');
+    track.className = 'carousel-track';
+    movies.forEach((m, i) => {
+        const slide = document.createElement('div');
+        slide.className = 'carousel-slide' + (i === 0 ? ' active' : '');
+        slide.dataset.index = i;
+        // reuse the home card markup for a slide
+        slide.appendChild(createMovieCardForHome(m));
+        track.appendChild(slide);
+    });
+
+    const prev = document.createElement('button');
+    prev.className = 'carousel-prev';
+    prev.type = 'button';
+    prev.textContent = '‹';
+
+    const next = document.createElement('button');
+    next.className = 'carousel-next';
+    next.type = 'button';
+    next.textContent = '›';
+
+    container.appendChild(prev);
+    container.appendChild(track);
+    container.appendChild(next);
+
+    const slides = track.querySelectorAll('.carousel-slide');
+    let idx = 0;
+    function show(i) {
+        slides.forEach(s => s.classList.toggle('active', Number(s.dataset.index) === i));
+    }
+
+    prev.addEventListener('click', () => { idx = (idx - 1 + slides.length) % slides.length; show(idx); });
+    next.addEventListener('click', () => { idx = (idx + 1) % slides.length; show(idx); });
+
+    // auto-advance every 5s, pause on hover
+    let timer = setInterval(() => { idx = (idx + 1) % slides.length; show(idx); }, 5000);
+    [container, prev, next].forEach(el => {
+        el.addEventListener('mouseenter', () => clearInterval(timer));
+        el.addEventListener('mouseleave', () => { timer = setInterval(() => { idx = (idx + 1) % slides.length; show(idx); }, 5000); });
+    });
+}
+
+async function populateMainGrids({ page = 1, limit = 100, homeLimit = 6 } = {}) { // changed default limit -> 100
     try {
+        
         const moviesRes = await fetchMovies({ query: '', page, limit });
         const movies = moviesRes.movies || [];
 
-        // All containers that should show movies
+        
         const grids = Array.from(document.querySelectorAll('.movie-list'));
         grids.forEach(grid => {
-
             if (grid.id === 'movieList') {
                 renderMovies(grid, movies);
             } else if (grid.id === 'homeMovieList') {
-
                 renderMovies(grid, movies.slice(0, homeLimit));
             } else {
-
                 renderMovies(grid, movies.slice(0, Math.min(homeLimit, movies.length)));
             }
         });
 
-        // Update any moviesCount element if present (Movies page)
+       
+        const [topRes, popularRes, newlyRes] = await Promise.all([
+            tmdbGetTopRated({ page: 1 }).catch(() => ({ movies: [] })),
+            tmdbGetPopular({ page: 1 }).catch(() => ({ movies: [] })),
+            tmdbGetPopular({ page: 2 }).catch(() => ({ movies: [] }))
+        ]);
+
+        try {
+            const bestSix = (topRes.movies || []).slice(0, 6);
+            populateBestCarousel(bestSix, 'bestCarousel');
+        } catch (e) {
+            console.warn('populateBestCarousel failed', e);
+        }
+
+        const sections = [
+            { id: 'top-rated', movies: (topRes.movies || []), count: 6 },
+            { id: 'popular', movies: (popularRes.movies || []), count: 6 },
+            { id: 'newly-added', movies: (newlyRes.movies || []), count: 6 }
+        ];
+
+        sections.forEach(s => {
+            const sec = document.getElementById(s.id);
+            if (!sec) return;
+           
+            let list = sec.querySelector('.movie-list');
+            if (!list) {
+                list = document.createElement('div');
+                list.className = 'movie-list';
+                sec.appendChild(list);
+            }
+            renderMovies(list, s.movies.slice(0, s.count));
+        });
+
+        // Update Movies page count if present
         const moviesCount = document.getElementById('moviesCount');
         if (moviesCount) moviesCount.textContent = `Showing ${movies.length} of ${movies.length}`;
     } catch (err) {
@@ -263,12 +347,11 @@ async function populateMainGrids({ page = 1, limit = 18, homeLimit = 6 } = {}) {
     }
 }
 
-// ensure page initialization runs
 document.addEventListener('DOMContentLoaded', () => {
     // existing UI setup
     try { setupApiUI(); } catch (e) { /* ignore if setupApiUI not present */ }
 
-
+    // populate grids (home & movies pages)
     populateMainGrids({ page: 1, limit: 18 }).catch(err => console.error(err));
 });
 
@@ -290,7 +373,6 @@ function debounce(fn, wait = 300) {
     };
 }
 
-// Attach default event handlers (call once on page load)
 function setupApiUI() {
     const searchInput = document.querySelector('#searchInput');
     const searchResults = document.querySelector('#moviesContainer');
@@ -314,7 +396,7 @@ function setupApiUI() {
         doSearch();
     }
 
-
+    // Delegate clicks on movie cards for view/rate actions
     if (searchResults) {
         searchResults.addEventListener('click', async (ev) => {
             const btn = ev.target.closest('button[data-action]');
@@ -326,7 +408,7 @@ function setupApiUI() {
             if (action === 'view') {
                 try {
                     const movie = await getMovie(movieId);
-                    showMovieDetail(movie);
+                    showMovieDetail(movie); // implement this function in your UI code
                 } catch (err) {
                     console.error(err);
                     alert('Failed to load movie detail.');
@@ -368,6 +450,7 @@ function setupApiUI() {
     }
 }
 
+// Example placeholder for showing movie detail (implement your own UI)
 function showMovieDetail(movie) {
     const detail = document.querySelector('#movieDetail');
     if (!detail) {
@@ -383,6 +466,7 @@ function showMovieDetail(movie) {
     `;
 }
 
+// Expose functions for other scripts if needed
 window.MovieApi = {
     fetchMovies,
     getMovie,

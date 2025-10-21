@@ -1,367 +1,542 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movies | Movie Ratings</title>
-    <style>
-        .navbar {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          background: #222;
-          padding: 12px 24px;
-          margin-bottom: 32px;
-          border-radius: 8px;
-        }
-        .navbar-logo {
-          width: 60px;
-          height: 40px;
-          background: #444;
-          color: #bbb;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 18px;
-          border-radius: 4px;
-        }
-        .navbar-logo::after {
-          content: "Logo";
-        }
-        .navbar-links {
-          list-style: none;
-          display: flex;
-          gap: 32px;
-          margin: 0;
-          padding: 0;
-        }
-        .navbar-links li a {
-          color: #fff;
-          text-decoration: none;
-          font-size: 16px;
-          padding: 6px 12px;
-          border-radius: 4px;
-          transition: background 0.2s;
-        }
-        .navbar-links li a:hover,
-        .navbar-links li.active a {
-          background: #444;
-        }
-        .navbar-search {
-          width: 180px;
-          height: 40px;
-          background: #eee;
-          color: #888;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 16px;
-          border-radius: 6px;
-          border: 1px solid #ccc;
-          margin-left: 32px;
-        }
-        .navbar-search::after {
-          content: "Search";
-        }
-        .navbar-profile {
-          width: 40px;
-          height: 40px;
-          background: #444;
-          color: #bbb;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 16px;
-          border-radius: 50%;
-          margin-left: 16px;
-        }
-        .navbar-profile::after {
-          content: "Profile";
-        }
-        .movie-list {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 32px;
-          justify-content: center;
-          margin: 0 auto;
-          max-width: 900px;
-        }
-        .movie-card {
-          border: 1px solid #ccc;
-          padding: 16px;
-          background: #f9f9f9;
-          border-radius: 8px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-        .movie-poster-placeholder {
-          width: 100%;
-          height: 150px;
-          background: #ddd;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: #888;
-          font-size: 18px;
-          margin-bottom: 12px;
-          border-radius: 4px;
-        }
-        .movie-poster-placeholder::after {
-          content: "Poster";
-        }
-        .movie-info h2 {
-          margin: 0 0 8px 0;
-        }
-        .filter-bar {
-          display: flex;
-          justify-content: center;
-          gap: 32px;
-          margin-bottom: 32px;
-        }
-        .filter-placeholder {
-          width: 180px;
-          height: 40px;
-          background: #eee;
-          color: #888;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 16px;
-          border-radius: 6px;
-          border: 1px solid #ccc;
-          position: relative;
-        }
-        .filter-placeholder:nth-child(1)::after {
-          content: "Genre Filter";
-        }
-        .filter-placeholder:nth-child(2)::after {
-          content: "Rating Filter";
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Movies | Movie Ratings</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- page styles (keeps same dark theme as index, adds left filter sidebar) -->
+  <style>
+    :root {
+      --bg-1: #081a2b;
+      --bg-2: #02121b;
+      --panel: rgba(255,255,255,0.03);
+      --accent: #39a0ff;
+      --text: #eaf6f2;
+      --muted: rgba(234,246,242,0.75);
+    }
+    body{
+      margin:0;
+      min-height:100vh;
+      color: var(--text);
+      background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    /* top navbar (kept compact) */
+    .navbar.custom{
+      background: linear-gradient(90deg,#021025 0%, #04122a 100%);
+      border-bottom:1px solid rgba(255,255,255,0.03);
+      padding:10px 18px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-sizing:border-box;
+    }
+    .navbar-logo{ width:64px;height:44px;border-radius:8px;background:linear-gradient(180deg,#071428,#021922);display:flex;align-items:center;justify-content:center;color:#ffffff;font-weight:700;flex:0 0 auto;border:1px solid rgba(255,255,255,0.03); }
+    .navbar-center{ flex:1 1 auto; display:flex; justify-content:center; align-items:center; pointer-events:auto; }
+    .navbar-links{list-style:none;margin:0;padding:0;display:flex;gap:18px;align-items:center}
+    .navbar-links a{ color:#ffffff; text-decoration:none; padding:8px 12px; border-radius:8px; display:inline-block; transition:all .12s; font-weight:500;}
+    .navbar-right{ display:flex; align-items:center; gap:10px; flex:0 0 auto; }
+    .navbar-search{ min-width:200px; background:transparent; border:1px solid rgba(255,255,255,0.03); color:#ffffff; height:38px; padding:6px 10px; border-radius:8px; }
+
+    /* page layout */
+    .page-wrap{ max-width:1200px; margin:20px auto; padding:0 16px; display:grid; grid-template-columns: 280px 1fr; gap:24px; box-sizing:border-box; align-items:start; }
+    /* left sidebar (filter) */
+    .filter-panel{
+      background: linear-gradient(180deg,#07142800,#071428);
+      border-radius:12px;
+      padding:16px;
+      border:1px solid rgba(255,255,255,0.04);
+      color: var(--muted);
+      box-sizing:border-box;
+      min-height:240px;
+    }
+    /* make the panel sticky on larger screens so it 'moves with screen' */
+    @media (min-width: 900px) {
+      .filter-panel { position: sticky; top: 86px; align-self:start; }
+    }
+
+    .filter-title{ color:var(--text); font-weight:700; margin:0 0 12px 0; font-size:1.05rem; display:flex; justify-content:space-between; align-items:center; gap:8px; }
+    .filter-section{ margin-bottom:14px; }
+    .filter-section h6{ margin:0 0 8px 0; color:var(--text); font-size:0.95rem; }
+    .genre-list{ display:flex; flex-direction:column; gap:8px; max-height:220px; overflow:auto; padding-right:6px; }
+    .genre-item{ display:flex; gap:8px; align-items:center; color:var(--muted); }
+    .rating-buttons{ display:flex; gap:8px; flex-wrap:wrap; }
+    .rating-btn{ padding:8px 10px; border-radius:8px; background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--text); cursor:pointer; }
+    .rating-btn.active{ background:var(--accent); color:#001425; transform:translateY(-2px); }
+
+    .clear-filters{ background:transparent; color:var(--muted); border:none; font-size:0.9rem; cursor:pointer; }
+
+    /* movies grid */
+    .movies-area{ }
+    .movies-header{ display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px; }
+    .movies-header h2{ margin:0; color:var(--text); font-size:1.25rem; }
+    .movies-count{ color:var(--muted); font-size:0.95rem; }
+
+    .movie-list{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+    .movie-card{
+      background: linear-gradient(180deg,#07142800,#071428);
+      border-radius:10px;
+      padding:12px;
+      border:1px solid rgba(255,255,255,0.04);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      min-height:300px;
+      box-sizing:border-box;
+    }
+    .movie-card img{ width:100%; height:180px; object-fit:cover; border-radius:8px; display:block; }
+    .movie-info h3{ margin:0; color:var(--text); font-size:1rem; }
+    .meta{ color:var(--muted); font-size:0.9rem; }
+
+    /* responsive: sidebar collapses into top controls on small screens */
+    @media (max-width: 899px){
+      .page-wrap{ grid-template-columns: 1fr; }
+      .filter-panel{ order: -1; position:relative; width:100%; display:block; padding:12px; }
+      .filter-collapsible{ display:flex; gap:8px; align-items:center; }
+      .filter-toggle{ background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--text); padding:8px 10px; border-radius:10px; }
+      .genre-list{ flex-direction:row; gap:10px; overflow-x:auto; padding:8px 0; max-height:none; }
+    }
+    @media (max-width: 1000px){
+      .movie-list{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+    @media (max-width: 600px){
+      .movie-list{ grid-template-columns: 1fr; }
+      .movie-card img{ height:150px; }
+    }
+
+    /* subtle focus states */
+    input[type="search"], .rating-btn, .filter-toggle, .clear-filters {
+      outline-color: rgba(57,160,255,0.35);
+    }
+  </style>
 </head>
 <body>
+  <nav class="navbar custom">
+    <div class="navbar-logo">MR</div>
+    <div class="navbar-center">
+      <ul class="navbar-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a class="active" href="Movies.html">Movies</a></li>
+        <li><a href="../index.html#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="navbar-right">
+      <input class="form-control form-control-sm navbar-search" id="globalSearch" type="search" placeholder="Search title, actor..." aria-label="Search movies">
+      <div class="navbar-profile">U</div>
+    </div>
+  </nav>
 
-<nav class="navbar">
-  <div class="navbar-logo">
-    <!-- Logo Placeholder -->
-  </div>
-  <ul class="navbar-links">
-    <li><a href="../index.html">Home</a></li>
-    <li class="active"><a href="Movies.html">Movies</a></li>
-    <li><a href="#">Contact</a></li>
-  </ul>
-  <div class="navbar-search">
-    <!-- Search Placeholder -->
-  </div>
-  <div class="navbar-profile">
-    <!-- Profile Placeholder -->
-  </div>
-</nav>
+  <main class="page-wrap" aria-label="Movies page layout with left filter">
+    <!-- LEFT FILTER PANEL -->
+    <aside class="filter-panel" aria-label="Movie filters">
+      <div class="filter-title">
+        <div>Filters</div>
+        <div style="font-size:0.9rem;color:var(--muted)"><button id="clearFilters" class="clear-filters" title="Clear all filters">Clear</button></div>
+      </div>
 
-<div class="filter-bar">
-  <div class="filter-placeholder">
-    <!-- Genre Filter Placeholder -->
-  </div>
-  <div class="filter-placeholder">
-    <!-- Rating Filter Placeholder -->
-  </div>
-</div>
+      <!-- collapsible controls shown on small screens -->
+      <div class="filter-collapsible" style="display:none;" aria-hidden="true"></div>
 
-<div class="movie-list">
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 1</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 1.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 2</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 2.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 3</h2>
-      <p>Rating: ***</p>
-      <p>Description: Description for Movie Title 3.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 4</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 4.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 5</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 5.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 6</h2>
-      <p>Rating: ***</p>
-      <p>Description: Description for Movie Title 6.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 7</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 7.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 8</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 8.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 9</h2>
-      <p>Rating: ***</p>
-      <p>Description: Description for Movie Title 9.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 10</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 10.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 11</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 11.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 12</h2>
-      <p>Rating: ***</p>
-      <p>Description: Description for Movie Title 12.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 13</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 13.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 14</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 14.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 15</h2>
-      <p>Rating: ***</p>
-      <p>Description: Description for Movie Title 15.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 16</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 16.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 17</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 17.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 18</h2>
-      <p>Rating: ***</p>
-      <p>Description: Description for Movie Title 18.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 19</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 19.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 20</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 20.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 21</h2>
-      <p>Rating: ***</p>
-      <p>Description: Description for Movie Title 21.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 22</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 22.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 23</h2>
-      <p>Rating: *****</p>
-      <p>Description: Description for Movie Title 23.</p>
-    </div>
-  </div>
-  <div class="movie-card">
-    <div class="movie-poster-placeholder"></div>
-    <div class="movie-info">
-      <h2>Movie Title 24</h2>
-      <p>Rating: ***</p>
-      <p>Description: Description for Movie Title 24.</p>
-    </div>
-  </div>
-</div>
+      <div class="filter-section" aria-labelledby="genre-heading">
+        <h6 id="genre-heading">Genres</h6>
+        <div class="genre-list" id="genreList" role="group" aria-label="Filter by genres">
+          <!-- checkboxes generated in HTML for accessibility -->
+          <label class="genre-item"><input type="checkbox" value="Action"> Action</label>
+          <label class="genre-item"><input type="checkbox" value="Drama"> Drama</label>
+          <label class="genre-item"><input type="checkbox" value="Comedy"> Comedy</label>
+          <label class="genre-item"><input type="checkbox" value="Sci-Fi"> Sci-Fi</label>
+          <label class="genre-item"><input type="checkbox" value="Thriller"> Thriller</label>
+          <label class="genre-item"><input type="checkbox" value="Romance"> Romance</label>
+          <label class="genre-item"><input type="checkbox" value="Documentary"> Documentary</label>
+          <label class="genre-item"><input type="checkbox" value="Animation"> Animation</label>
+        </div>
+      </div>
 
+      <div class="filter-section" aria-labelledby="rating-heading">
+        <h6 id="rating-heading">Minimum rating</h6>
+        <div class="rating-buttons" role="radiogroup" aria-label="Minimum rating">
+          <button class="rating-btn" data-min="0" aria-pressed="true">Any</button>
+          <button class="rating-btn" data-min="3">>= 3*</button>
+          <button class="rating-btn" data-min="4">>= 4*</button>
+          <button class="rating-btn" data-min="4.5">>= 4.5*</button>
+          <button class="rating-btn" data-min="5">5*</button>
+        </div>
+      </div>
+
+      <div class="filter-section" aria-labelledby="sort-heading">
+        <h6 id="sort-heading">Sort</h6>
+        <select id="sortSelect" class="form-select form-select-sm" aria-label="Sort movies">
+          <option value="relevance">Relevance</option>
+          <option value="rating_desc">Rating: High → Low</option>
+          <option value="rating_asc">Rating: Low → High</option>
+          <option value="year_desc">Year: New → Old</option>
+          <option value="year_asc">Year: Old → New</option>
+        </select>
+      </div>
+    </aside>
+
+    <!-- MOVIES AREA -->
+    <section class="movies-area" aria-live="polite">
+      <div class="movies-header">
+        <h2>All Movies</h2>
+        <div class="movies-count" id="moviesCount">Showing 0 of 0</div>
+      </div>
+
+      <div class="movie-list" id="movieList">
+        <!-- sample movie cards with data-genre and data-rating (1-5 scale). Add data-year so sort can use it. -->
+        <article class="movie-card" data-genre="Action" data-rating="4.5" data-year="2024" data-title="Echo Strike">
+          <img src="https://picsum.photos/seed/a1/600/360" alt="Echo Strike poster">
+          <div class="movie-info">
+            <h3>Echo Strike</h3>
+            <div class="meta">Action · 4.5* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">High-octane thriller with sharp choreography and practical effects.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Drama" data-rating="4.8" data-year="2023" data-title="Silent Rivers">
+          <img src="https://picsum.photos/seed/d1/600/360" alt="Silent Rivers poster">
+          <div class="movie-info">
+            <h3>Silent Rivers</h3>
+            <div class="meta">Drama · 4.8* · 2023</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">A moving character study that earned awards on the festival circuit.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Comedy" data-rating="3.6" data-year="2021" data-title="Late Night Chips">
+          <img src="https://picsum.photos/seed/c1/600/360" alt="Late Night Chips poster">
+          <div class="movie-info">
+            <h3>Late Night Chips</h3>
+            <div class="meta">Comedy · 3.6* · 2021</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Low-key indie comedy with a warm heart.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Sci-Fi" data-rating="4.2" data-year="2022" data-title="Neon Horizon">
+          <img src="https://picsum.photos/seed/sf1/600/360" alt="Neon Horizon poster">
+          <div class="movie-info">
+            <h3>Neon Horizon</h3>
+            <div class="meta">Sci-Fi · 4.2* · 2022</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Visually ambitious sci-fi exploring memory and identity.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Thriller" data-rating="4.0" data-year="2020" data-title="Red Corridor">
+          <img src="https://picsum.photos/seed/t1/600/360" alt="Red Corridor poster">
+          <div class="movie-info">
+            <h3>Red Corridor</h3>
+            <div class="meta">Thriller · 4.0* · 2020</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">A tense cat-and-mouse between a detective and an anonymous stalker.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Romance" data-rating="3.9" data-year="2019" data-title="Letters to June">
+          <img src="https://picsum.photos/seed/r1/600/360" alt="Letters to June poster">
+          <div class="movie-info">
+            <h3>Letters to June</h3>
+            <div class="meta">Romance · 3.9* · 2019</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Gentle romance about second chances and small-town life.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Documentary" data-rating="4.7" data-year="2021" data-title="Beneath the Ice">
+          <img src="https://picsum.photos/seed/doc1/600/360" alt="Beneath the Ice poster">
+          <div class="movie-info">
+            <h3>Beneath the Ice</h3>
+            <div class="meta">Documentary · 4.7* · 2021</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Eye-opening environmental documentary with strong reporting.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Animation" data-rating="4.9" data-year="2024" data-title="Starling Way">
+          <img src="https://picsum.photos/seed/an1/600/360" alt="Starling Way poster">
+          <div class="movie-info">
+            <h3>Starling Way</h3>
+            <div class="meta">Animation · 4.9* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Beautifully animated family adventure with universal appeal.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Action" data-rating="3.2" data-year="2018" data-title="Frontline Run">
+          <img src="https://picsum.photos/seed/a2/600/360" alt="Frontline Run poster">
+          <div class="movie-info">
+            <h3>Frontline Run</h3>
+            <div class="meta">Action · 3.2* · 2018</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Fast-paced but lightweight summer blockbuster.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Drama" data-rating="4.1" data-year="2020" data-title="Glass Harbor">
+          <img src="https://picsum.photos/seed/d2/600/360" alt="Glass Harbor poster">
+          <div class="movie-info">
+            <h3>Glass Harbor</h3>
+            <div class="meta">Drama · 4.1* · 2020</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">A multi-generational tale with an excellent ensemble cast.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Comedy" data-rating="4.4" data-year="2022" data-title="Two Left Socks">
+          <img src="https://picsum.photos/seed/c2/600/360" alt="Two Left Socks poster">
+          <div class="movie-info">
+            <h3>Two Left Socks</h3>
+            <div class="meta">Comedy · 4.4* · 2022</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Witty ensemble comedy with sharp dialogue.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Sci-Fi" data-rating="3.8" data-year="2017" data-title="Orbit Fall">
+          <img src="https://picsum.photos/seed/sf2/600/360" alt="Orbit Fall poster">
+          <div class="movie-info">
+            <h3>Orbit Fall</h3>
+            <div class="meta">Sci-Fi · 3.8* · 2017</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">A small-budget space drama with an ambitious premise.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Thriller" data-rating="4.6" data-year="2023" data-title="Mirror Line">
+          <img src="https://picsum.photos/seed/t2/600/360" alt="Mirror Line poster">
+          <div class="movie-info">
+            <h3>Mirror Line</h3>
+            <div class="meta">Thriller · 4.6* · 2023</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Psychological thriller with an unpredictable final act.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Romance" data-rating="4.0" data-year="2024" data-title="Summer in June">
+          <img src="https://picsum.photos/seed/r2/600/360" alt="Summer in June poster">
+          <div class="movie-info">
+            <h3>Summer in June</h3>
+            <div class="meta">Romance · 4.0* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Modern romance with strong chemistry between leads.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Documentary" data-rating="3.5" data-year="2016" data-title="City of Echoes">
+          <img src="https://picsum.photos/seed/doc2/600/360" alt="City of Echoes poster">
+          <div class="movie-info">
+            <h3>City of Echoes</h3>
+            <div class="meta">Documentary · 3.5* · 2016</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Local history documentary with strong archival footage.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Animation" data-rating="4.3" data-year="2020" data-title="Sunset Garden">
+          <img src="https://picsum.photos/seed/an2/600/360" alt="Sunset Garden poster">
+          <div class="movie-info">
+            <h3>Sunset Garden</h3>
+            <div class="meta">Animation · 4.3* · 2020</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Charming animated tale with a lush visual style.</p>
+          </div>
+        </article>
+
+        <!-- added 11 more movie cards -->
+        <article class="movie-card" data-genre="Action" data-rating="4.0" data-year="2021" data-title="Iron Circuit">
+          <img src="https://picsum.photos/seed/a3/600/360" alt="Iron Circuit poster">
+          <div class="movie-info">
+            <h3>Iron Circuit</h3>
+            <div class="meta">Action · 4.0* · 2021</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">A gritty heist movie with inventive stunts.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Drama" data-rating="3.7" data-year="2015" data-title="Paper Towns">
+          <img src="https://picsum.photos/seed/d3/600/360" alt="Paper Towns poster">
+          <div class="movie-info">
+            <h3>Paper Towns</h3>
+            <div class="meta">Drama · 3.7* · 2015</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Intimate portrait of a struggling artist.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Comedy" data-rating="4.6" data-year="2024" data-title="Campus Oddities">
+          <img src="https://picsum.photos/seed/c3/600/360" alt="Campus Oddities poster">
+          <div class="movie-info">
+            <h3>Campus Oddities</h3>
+            <div class="meta">Comedy · 4.6* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Smart workplace-style comedy set at a university.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Sci-Fi" data-rating="4.8" data-year="2025" data-title="Quantum Bloom">
+          <img src="https://picsum.photos/seed/sf3/600/360" alt="Quantum Bloom poster">
+          <div class="movie-info">
+            <h3>Quantum Bloom</h3>
+            <div class="meta">Sci-Fi · 4.8* · 2025</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Large-scale sci-fi about parallel lives and loss.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Thriller" data-rating="3.9" data-year="2014" data-title="Locked Frame">
+          <img src="https://picsum.photos/seed/t3/600/360" alt="Locked Frame poster">
+          <div class="movie-info">
+            <h3>Locked Frame</h3>
+            <div class="meta">Thriller · 3.9* · 2014</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Claustrophobic thriller with steady tension.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Romance" data-rating="4.5" data-year="2022" data-title="Cafe on 5th">
+          <img src="https://picsum.photos/seed/r3/600/360" alt="Cafe on 5th poster">
+          <div class="movie-info">
+            <h3>Cafe on 5th</h3>
+            <div class="meta">Romance · 4.5* · 2022</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Warm romantic comedy about second chances.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Documentary" data-rating="4.2" data-year="2018" data-title="River of Stories">
+          <img src="https://picsum.photos/seed/doc3/600/360" alt="River of Stories poster">
+          <div class="movie-info">
+            <h3>River of Stories</h3>
+            <div class="meta">Documentary · 4.2* · 2018</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Compelling oral histories from a riverside community.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Animation" data-rating="4.1" data-year="2016" data-title="Cloud Kites">
+          <img src="https://picsum.photos/seed/an3/600/360" alt="Cloud Kites poster">
+          <div class="movie-info">
+            <h3>Cloud Kites</h3>
+            <div class="meta">Animation · 4.1* · 2016</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Gentle animated fable about friendship and flight.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Action" data-rating="2.9" data-year="2012" data-title="Turbo Alley">
+          <img src="https://picsum.photos/seed/a4/600/360" alt="Turbo Alley poster">
+          <div class="movie-info">
+            <h3>Turbo Alley</h3>
+            <div class="meta">Action · 2.9* · 2012</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">B-movie action with wild set pieces.</p>
+          </Div>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function(){
+      const genreInputs = Array.from(document.querySelectorAll('#genreList input[type="checkbox"]'));
+      const ratingBtns = Array.from(document.querySelectorAll('.rating-btn'));
+      const sortSelect = document.getElementById('sortSelect');
+      const movieList = document.getElementById('movieList');
+      const moviesCount = document.getElementById('moviesCount');
+      const clearBtn = document.getElementById('clearFilters');
+      const searchInput = document.getElementById('globalSearch');
+
+      let selectedGenres = new Set();
+      let minRating = 0;
+      let currentSort = 'relevance';
+      let searchTerm = '';
+
+      function applyFilters(){
+        const nodes = Array.from(movieList.querySelectorAll('.movie-card'));
+        const visible = nodes.filter(n => {
+          const genre = (n.dataset.genre || '').toLowerCase();
+          const rating = parseFloat(n.dataset.rating || '0');
+          const title = (n.dataset.title || n.querySelector('h3')?.textContent || '').toLowerCase();
+          if (selectedGenres.size && !selectedGenres.has(genre)) return false;
+          if (rating < minRating) return false;
+          if (searchTerm && !title.includes(searchTerm.toLowerCase())) return false;
+          return true;
+        });
+
+        // update count
+        moviesCount.textContent = `Showing ${visible.length} of ${nodes.length}`;
+
+        // sorting visible nodes
+        const sorted = visible.slice();
+        sorted.sort((a,b) => {
+          if (currentSort === 'rating_desc') return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
+          if (currentSort === 'rating_asc') return parseFloat(a.dataset.rating) - parseFloat(b.dataset.rating);
+          if (currentSort === 'year_desc') return parseInt(b.dataset.year) - parseInt(a.dataset.year);
+          if (currentSort === 'year_asc') return parseInt(a.dataset.year) - parseInt(b.dataset.year);
+          // relevance: keep document order
+          return 0;
+        });
+
+        // hide all then append visible in order
+        nodes.forEach(n => n.style.display = 'none');
+        sorted.forEach(node => {
+          node.style.display = '';
+          movieList.appendChild(node);
+        });
+      }
+
+      // wire genre checkboxes
+      genreInputs.forEach(cb => {
+        cb.addEventListener('change', () => {
+          selectedGenres = new Set(Array.from(genreInputs).filter(i => i.checked).map(i => i.value.toLowerCase()));
+          applyFilters();
+        });
+      });
+
+      // rating buttons (acts as radio)
+      ratingBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          ratingBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          minRating = parseFloat(btn.dataset.min) || 0;
+          applyFilters();
+        });
+      });
+
+      // sort select
+      sortSelect.addEventListener('change', (e) => {
+        currentSort = e.target.value;
+        applyFilters();
+      });
+
+      // global search
+      let searchTimer = null;
+      searchInput.addEventListener('input', (e) => {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+          searchTerm = e.target.value;
+          applyFilters();
+        }, 250);
+      });
+
+      // clear filters
+      clearBtn.addEventListener('click', () => {
+        genreInputs.forEach(i => i.checked = false);
+        selectedGenres.clear();
+        ratingBtns.forEach(b => b.classList.remove('active'));
+        ratingBtns[0].classList.add('active'); // Any
+        minRating = 0;
+        sortSelect.value = 'relevance';
+        currentSort = 'relevance';
+        searchInput.value = '';
+        searchTerm = '';
+        applyFilters();
+      });
+
+      // initialize: set Any rating active
+      ratingBtns[0].classList.add('active');
+
+      // initial apply
+      applyFilters();
+    })();
+  </script>
+
+  <!-- load client API (relative path from Pages/) -->
+  <script src="../js/movieApi.js"></script>
+
+  <script>
+    (function(){
+      // existing applyFilters function is defined later in this file's script block;
+      // if applyFilters() is defined already it will run; otherwise your inline script below still sets up handlers.
+      try { if (typeof applyFilters === 'function') applyFilters(); } catch(e){}
+    })();
+  </script>
 </body>
 </html>
