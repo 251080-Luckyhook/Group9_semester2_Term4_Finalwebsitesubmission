@@ -149,7 +149,7 @@ async function tmdbGetTopRated({ page = 1 } = {}) {
 }
 
 function createMovieCard(movie) {
-)
+
     const div = document.createElement('div');
     div.className = 'movie-card';
     div.dataset.movieId = movie.id;
@@ -167,7 +167,7 @@ function createMovieCard(movie) {
     `;
     return div;
 }
- h2)
+ ;
 function createMovieCardForHome(movie) {
     const div = document.createElement('div');
     div.className = 'movie-card';

@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Movies | Movie Ratings</title>
 
-  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- page styles (keeps same dark theme as index, adds left filter sidebar) -->
   <style>
     :root {
       --bg-1: #081a2b;
@@ -26,7 +24,6 @@
       font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
 
-    /* top navbar (kept compact) */
     .navbar.custom{
       background: linear-gradient(90deg,#021025 0%, #04122a 100%);
       border-bottom:1px solid rgba(255,255,255,0.03);
@@ -43,9 +40,9 @@
     .navbar-right{ display:flex; align-items:center; gap:10px; flex:0 0 auto; }
     .navbar-search{ min-width:200px; background:transparent; border:1px solid rgba(255,255,255,0.03); color:#ffffff; height:38px; padding:6px 10px; border-radius:8px; }
 
-    /* page layout */
-    .page-wrap{ max-width:1200px; margin:20px auto; padding:0 16px; display:grid; grid-template-columns: 280px 1fr; gap:24px; box-sizing:border-box; align-items:start; }
-    /* left sidebar (filter) */
+    .page-wrap{
+      max-width:1200px; margin:20px auto; padding:0 16px; display:grid; grid-template-columns: 280px 1fr; gap:24px; box-sizing:border-box; align-items:start;
+    }
     .filter-panel{
       background: linear-gradient(180deg,#07142800,#071428);
       border-radius:12px;
@@ -55,7 +52,6 @@
       box-sizing:border-box;
       min-height:240px;
     }
-    /* make the panel sticky on larger screens so it 'moves with screen' */
     @media (min-width: 900px) {
       .filter-panel { position: sticky; top: 86px; align-self:start; }
     }
@@ -71,9 +67,9 @@
 
     .clear-filters{ background:transparent; color:var(--muted); border:none; font-size:0.9rem; cursor:pointer; }
 
-    /* movies grid */
-    .movies-area{ }
-    .movies-header{ display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px; }
+    .movies-header{
+      display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px;
+    }
     .movies-header h2{ margin:0; color:var(--text); font-size:1.25rem; }
     .movies-count{ color:var(--muted); font-size:0.95rem; }
 
@@ -97,7 +93,6 @@
     .movie-info h3{ margin:0; color:var(--text); font-size:1rem; }
     .meta{ color:var(--muted); font-size:0.9rem; }
 
-    /* responsive: sidebar collapses into top controls on small screens */
     @media (max-width: 899px){
       .page-wrap{ grid-template-columns: 1fr; }
       .filter-panel{ order: -1; position:relative; width:100%; display:block; padding:12px; }
@@ -113,7 +108,6 @@
       .movie-card img{ height:150px; }
     }
 
-    /* subtle focus states */
     input[type="search"], .rating-btn, .filter-toggle, .clear-filters {
       outline-color: rgba(57,160,255,0.35);
     }
@@ -126,30 +120,30 @@
       <ul class="navbar-links">
         <li><a href="../index.html">Home</a></li>
         <li><a class="active" href="Movies.html">Movies</a></li>
-        <li><a href="../index.html#contact">Contact</a></li>
+        <li><a href="Contact.html">Contact</a></li>
       </ul>
     </div>
     <div class="navbar-right">
       <input class="form-control form-control-sm navbar-search" id="globalSearch" type="search" placeholder="Search title, actor..." aria-label="Search movies">
-      <div class="navbar-profile">U</div>
+      <div class="navbar-profile" id="profileIcon" style="cursor:pointer;">U</div>
     </div>
   </nav>
 
   <main class="page-wrap" aria-label="Movies page layout with left filter">
-    <!-- LEFT FILTER PANEL -->
+  
     <aside class="filter-panel" aria-label="Movie filters">
       <div class="filter-title">
         <div>Filters</div>
         <div style="font-size:0.9rem;color:var(--muted)"><button id="clearFilters" class="clear-filters" title="Clear all filters">Clear</button></div>
       </div>
 
-      <!-- collapsible controls shown on small screens -->
+   
       <div class="filter-collapsible" style="display:none;" aria-hidden="true"></div>
 
       <div class="filter-section" aria-labelledby="genre-heading">
         <h6 id="genre-heading">Genres</h6>
         <div class="genre-list" id="genreList" role="group" aria-label="Filter by genres">
-          <!-- checkboxes generated in HTML for accessibility -->
+         
           <label class="genre-item"><input type="checkbox" value="Action"> Action</label>
           <label class="genre-item"><input type="checkbox" value="Drama"> Drama</label>
           <label class="genre-item"><input type="checkbox" value="Comedy"> Comedy</label>
@@ -184,7 +178,7 @@
       </div>
     </aside>
 
-    <!-- MOVIES AREA -->
+
     <section class="movies-area" aria-live="polite">
       <div class="movies-header">
         <h2>All Movies</h2>
@@ -192,7 +186,6 @@
       </div>
 
       <div class="movie-list" id="movieList">
-        <!-- sample movie cards with data-genre and data-rating (1-5 scale). Add data-year so sort can use it. -->
         <article class="movie-card" data-genre="Action" data-rating="4.5" data-year="2024" data-title="Echo Strike">
           <img src="https://picsum.photos/seed/a1/600/360" alt="Echo Strike poster">
           <div class="movie-info">
@@ -379,7 +372,242 @@
           <div class="movie-info">
             <h3>Locked Frame</h3>
             <div class="meta">Thriller · 3.9* · 2014</div>
-            <p class="meta" style="margin-top:8px;color:var(--muted)">Claustrophobic thriller with steady tension.</p>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Mystery thriller with a unique visual style.</p>
+          </div>
+        </article>
+
+        <!-- Additional movie cards to reach 60 total -->
+        <article class="movie-card" data-genre="Horror" data-rating="4.2" data-year="2023" data-title="Dark Echo">
+          <img src="https://picsum.photos/seed/h1/600/360" alt="Dark Echo poster">
+          <div class="movie-info">
+            <h3>Dark Echo</h3>
+            <div class="meta">Horror · 4.2* · 2023</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Psychological horror that plays with sound and silence.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Adventure" data-rating="4.5" data-year="2024" data-title="Mountain Spirit">
+          <img src="https://picsum.photos/seed/adv1/600/360" alt="Mountain Spirit poster">
+          <div class="movie-info">
+            <h3>Mountain Spirit</h3>
+            <div class="meta">Adventure · 4.5* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Epic journey through the world's highest peaks.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Fantasy" data-rating="4.7" data-year="2023" data-title="Crystal Crown">
+          <img src="https://picsum.photos/seed/f1/600/360" alt="Crystal Crown poster">
+          <div class="movie-info">
+            <h3>Crystal Crown</h3>
+            <div class="meta">Fantasy · 4.7* · 2023</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Magical adventure in a crystalline kingdom.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Crime" data-rating="4.3" data-year="2024" data-title="Last Heist">
+          <img src="https://picsum.photos/seed/cr1/600/360" alt="Last Heist poster">
+          <div class="movie-info">
+            <h3>Last Heist</h3>
+            <div class="meta">Crime · 4.3* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Complex heist thriller with multiple twists.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Mystery" data-rating="4.4" data-year="2023" data-title="Hidden Clue">
+          <img src="https://picsum.photos/seed/m1/600/360" alt="Hidden Clue poster">
+          <div class="movie-info">
+            <h3>Hidden Clue</h3>
+            <div class="meta">Mystery · 4.4* · 2023</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Detective story with unexpected revelations.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Western" data-rating="4.1" data-year="2024" data-title="Sunset Trail">
+          <img src="https://picsum.photos/seed/w1/600/360" alt="Sunset Trail poster">
+          <div class="movie-info">
+            <h3>Sunset Trail</h3>
+            <div class="meta">Western · 4.1* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Modern take on classic western themes.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Sports" data-rating="4.6" data-year="2023" data-title="Final Match">
+          <img src="https://picsum.photos/seed/sp1/600/360" alt="Final Match poster">
+          <div class="movie-info">
+            <h3>Final Match</h3>
+            <div class="meta">Sports · 4.6* · 2023</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Inspiring story of an underdog team's journey.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Musical" data-rating="4.8" data-year="2024" data-title="Rhythm Street">
+          <img src="https://picsum.photos/seed/mu1/600/360" alt="Rhythm Street poster">
+          <div class="movie-info">
+            <h3>Rhythm Street</h3>
+            <div class="meta">Musical · 4.8* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Vibrant musical celebration of street culture.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="War" data-rating="4.5" data-year="2023" data-title="Silent Front">
+          <img src="https://picsum.photos/seed/war1/600/360" alt="Silent Front poster">
+          <div class="movie-info">
+            <h3>Silent Front</h3>
+            <div class="meta">War · 4.5* · 2023</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Powerful drama about survival and humanity.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Biography" data-rating="4.7" data-year="2024" data-title="Pioneer Spirit">
+          <img src="https://picsum.photos/seed/b1/600/360" alt="Pioneer Spirit poster">
+          <div class="movie-info">
+            <h3>Pioneer Spirit</h3>
+            <div class="meta">Biography · 4.7* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Inspiring true story of innovation and perseverance.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Family" data-rating="4.4" data-year="2023" data-title="Magic Garden">
+          <img src="https://picsum.photos/seed/fam1/600/360" alt="Magic Garden poster">
+          <div class="movie-info">
+            <h3>Magic Garden</h3>
+            <div class="meta">Family · 4.4* · 2023</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Heartwarming tale of family and imagination.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Action" data-rating="4.3" data-year="2024" data-title="Steel Thunder">
+          <img src="https://picsum.photos/seed/a4/600/360" alt="Steel Thunder poster">
+          <div class="movie-info">
+            <h3>Steel Thunder</h3>
+            <div class="meta">Action · 4.3* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">High-stakes action with stunning car chases.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Drama" data-rating="4.5" data-year="2023" data-title="Broken Mirrors">
+          <img src="https://picsum.photos/seed/d4/600/360" alt="Broken Mirrors poster">
+          <div class="movie-info">
+            <h3>Broken Mirrors</h3>
+            <div class="meta">Drama · 4.5* · 2023</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Emotional journey of self-discovery and healing.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Comedy" data-rating="4.2" data-year="2024" data-title="Office Party">
+          <img src="https://picsum.photos/seed/c4/600/360" alt="Office Party poster">
+          <div class="movie-info">
+            <h3>Office Party</h3>
+            <div class="meta">Comedy · 4.2* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Hilarious workplace comedy with heart.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Sci-Fi" data-rating="4.7" data-year="2023" data-title="Star Protocol">
+          <img src="https://picsum.photos/seed/sf4/600/360" alt="Star Protocol poster">
+          <div class="movie-info">
+            <h3>Star Protocol</h3>
+            <div class="meta">Sci-Fi · 4.7* · 2023</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Deep space mystery with stunning effects.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Horror" data-rating="4.4" data-year="2024" data-title="Whisper House">
+          <img src="https://picsum.photos/seed/h2/600/360" alt="Whisper House poster">
+          <div class="movie-info">
+            <h3>Whisper House</h3>
+            <div class="meta">Horror · 4.4* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Atmospheric horror with a unique premise.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Adventure" data-rating="4.8" data-year="2023" data-title="Lost City">
+          <img src="https://picsum.photos/seed/adv2/600/360" alt="Lost City poster">
+          <div class="movie-info">
+            <h3>Lost City</h3>
+            <div class="meta">Adventure · 4.8* · 2023</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Archaeological adventure in ancient ruins.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Fantasy" data-rating="4.6" data-year="2024" data-title="Dragon's Gate">
+          <img src="https://picsum.photos/seed/f2/600/360" alt="Dragon's Gate poster">
+          <div class="movie-info">
+            <h3>Dragon's Gate</h3>
+            <div class="meta">Fantasy · 4.6* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Epic fantasy with stunning mythical creatures.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Crime" data-rating="4.5" data-year="2023" data-title="Code Break">
+          <img src="https://picsum.photos/seed/cr2/600/360" alt="Code Break poster">
+          <div class="movie-info">
+            <h3>Code Break</h3>
+            <div class="meta">Crime · 4.5* · 2023</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">High-tech crime thriller with clever twists.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Mystery" data-rating="4.3" data-year="2024" data-title="Silent Witness">
+          <img src="https://picsum.photos/seed/m2/600/360" alt="Silent Witness poster">
+          <div class="movie-info">
+            <h3>Silent Witness</h3>
+            <div class="meta">Mystery · 4.3* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Gripping mystery with unexpected turns.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Western" data-rating="4.4" data-year="2023" data-title="Desert Law">
+          <img src="https://picsum.photos/seed/w2/600/360" alt="Desert Law poster">
+          <div class="movie-info">
+            <h3>Desert Law</h3>
+            <div class="meta">Western · 4.4* · 2023</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Gritty western about justice and redemption.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Sports" data-rating="4.7" data-year="2024" data-title="Champions Rise">
+          <img src="https://picsum.photos/seed/sp2/600/360" alt="Champions Rise poster">
+          <div class="movie-info">
+            <h3>Champions Rise</h3>
+            <div class="meta">Sports · 4.7* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Inspiring story of athletic achievement.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Musical" data-rating="4.5" data-year="2023" data-title="Stage Dreams">
+          <img src="https://picsum.photos/seed/mu2/600/360" alt="Stage Dreams poster">
+          <div class="movie-info">
+            <h3>Stage Dreams</h3>
+            <div class="meta">Musical · 4.5* · 2023</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Broadway dreams meet reality in this musical.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="War" data-rating="4.6" data-year="2024" data-title="Peace Line">
+          <img src="https://picsum.photos/seed/war2/600/360" alt="Peace Line poster">
+          <div class="movie-info">
+            <h3>Peace Line</h3>
+            <div class="meta">War · 4.6* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Moving story of hope during wartime.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Biography" data-rating="4.8" data-year="2023" data-title="Legend's Path">
+          <img src="https://picsum.photos/seed/b2/600/360" alt="Legend's Path poster">
+          <div class="movie-info">
+            <h3>Legend's Path</h3>
+            <div class="meta">Biography · 4.8* · 2023</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Compelling biography of a cultural icon.</p>
+          </div>
+        </article>
+
+        <article class="movie-card" data-genre="Family" data-rating="4.5" data-year="2024" data-title="Wonder Park">
+          <img src="https://picsum.photos/seed/fam2/600/360" alt="Wonder Park poster">
+          <div class="movie-info">
+            <h3>Wonder Park</h3>
+            <div class="meta">Family · 4.5* · 2024</div>
+            <p class="meta" style="margin-top:8px;color:var(--muted)">Magical adventure for the whole family.</p>
           </div>
         </article>
 
@@ -416,7 +644,7 @@
             <h3>Turbo Alley</h3>
             <div class="meta">Action · 2.9* · 2012</div>
             <p class="meta" style="margin-top:8px;color:var(--muted)">B-movie action with wild set pieces.</p>
-          </Div>
+          </div>
         </article>
 
       </div>
@@ -450,21 +678,21 @@
           return true;
         });
 
-        // update count
+       
         moviesCount.textContent = `Showing ${visible.length} of ${nodes.length}`;
 
-        // sorting visible nodes
+       
         const sorted = visible.slice();
         sorted.sort((a,b) => {
           if (currentSort === 'rating_desc') return parseFloat(b.dataset.rating) - parseFloat(a.dataset.rating);
           if (currentSort === 'rating_asc') return parseFloat(a.dataset.rating) - parseFloat(b.dataset.rating);
           if (currentSort === 'year_desc') return parseInt(b.dataset.year) - parseInt(a.dataset.year);
           if (currentSort === 'year_asc') return parseInt(a.dataset.year) - parseInt(b.dataset.year);
-          // relevance: keep document order
+          
           return 0;
         });
 
-        // hide all then append visible in order
+    
         nodes.forEach(n => n.style.display = 'none');
         sorted.forEach(node => {
           node.style.display = '';
@@ -472,7 +700,7 @@
         });
       }
 
-      // wire genre checkboxes
+    
       genreInputs.forEach(cb => {
         cb.addEventListener('change', () => {
           selectedGenres = new Set(Array.from(genreInputs).filter(i => i.checked).map(i => i.value.toLowerCase()));
@@ -480,7 +708,7 @@
         });
       });
 
-      // rating buttons (acts as radio)
+     
       ratingBtns.forEach(btn => {
         btn.addEventListener('click', () => {
           ratingBtns.forEach(b => b.classList.remove('active'));
@@ -490,13 +718,13 @@
         });
       });
 
-      // sort select
+    
       sortSelect.addEventListener('change', (e) => {
         currentSort = e.target.value;
         applyFilters();
       });
 
-      // global search
+  
       let searchTimer = null;
       searchInput.addEventListener('input', (e) => {
         clearTimeout(searchTimer);
@@ -506,7 +734,7 @@
         }, 250);
       });
 
-      // clear filters
+
       clearBtn.addEventListener('click', () => {
         genreInputs.forEach(i => i.checked = false);
         selectedGenres.clear();
@@ -520,23 +748,155 @@
         applyFilters();
       });
 
-      // initialize: set Any rating active
+     
       ratingBtns[0].classList.add('active');
 
-      // initial apply
+
       applyFilters();
     })();
   </script>
 
-  <!-- load client API (relative path from Pages/) -->
+
   <script src="../js/movieApi.js"></script>
 
   <script>
     (function(){
-      // existing applyFilters function is defined later in this file's script block;
-      // if applyFilters() is defined already it will run; otherwise your inline script below still sets up handlers.
+    
       try { if (typeof applyFilters === 'function') applyFilters(); } catch(e){}
     })();
   </script>
+
+<!-- Login/Signup Modal -->
+<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="authModalLabel">Welcome</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs" id="authTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="true">Login</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button" role="tab" aria-controls="signup" aria-selected="false">Sign Up</button>
+          </li>
+        </ul>
+        <div class="tab-content mt-3" id="authTabsContent">
+          <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+            <form id="loginForm">
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email" required>
+              </div>
+              <div class="mb-3">
+                <label for="loginPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+          </div>
+          <div class="tab-pane fade" id="signup" role="tabpanel" aria-labelledby="signup-tab">
+            <form id="signupForm">
+              <div class="mb-3">
+                <label for="signupName" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="signupName" placeholder="Enter your full name" required>
+              </div>
+              <div class="mb-3">
+                <label for="signupEmail" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="signupEmail" placeholder="Enter your email" required>
+              </div>
+              <div class="mb-3">
+                <label for="signupPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="signupPassword" placeholder="Create a password" required>
+              </div>
+              <div class="mb-3">
+                <label for="signupConfirmPassword" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="signupConfirmPassword" placeholder="Confirm your password" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  
+  document.addEventListener('DOMContentLoaded', function () {
+    const profileIcon = document.getElementById('profileIcon');
+    const authModal = new bootstrap.Modal(document.getElementById('authModal'));
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+
+ 
+    profileIcon.addEventListener('click', function () {
+      authModal.show();
+    });
+
+ 
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+   
+      if (email && password) {
+  
+        localStorage.setItem('user', JSON.stringify({ email, name: email.split('@')[0] }));
+        updateProfileIcon();
+        authModal.hide();
+        alert('Login successful!');
+      } else {
+        alert('Please fill in all fields.');
+      }
+    });
+
+
+    signupForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const confirmPassword = document.getElementById('signupConfirmPassword').value;
+
+
+      if (name && email && password && confirmPassword) {
+        if (password === confirmPassword) {
+
+          localStorage.setItem('user', JSON.stringify({ name, email }));
+          updateProfileIcon();
+          authModal.hide();
+          alert('Sign up successful!');
+        } else {
+          alert('Passwords do not match.');
+        }
+      } else {
+        alert('Please fill in all fields.');
+      }
+    });
+
+    // Update profile icon based on login status
+    function updateProfileIcon() {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user) {
+        profileIcon.textContent = user.name.charAt(0).toUpperCase();
+        profileIcon.title = `Logged in as ${user.name}`;
+      } else {
+        profileIcon.textContent = 'U';
+        profileIcon.title = 'Login/Signup';
+      }
+    }
+
+    updateProfileIcon();
+  });
+</script>
+
 </body>
 </html>

@@ -316,6 +316,77 @@
     .local-filter .filter-btn.active{
       transform: translateY(-1px);
     }
+
+
+    .modal-backdrop {
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+    .modal-content {
+      background: linear-gradient(180deg, #071428, #021922);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: #eaf6f2;
+    }
+    .modal-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem 1.5rem;
+    }
+    .modal-title {
+      color: #eaf6f2;
+      font-weight: 700;
+    }
+    .modal-body {
+      padding: 1.5rem;
+    }
+    .modal-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem 1.5rem;
+    }
+    .form-control {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #eaf6f2;
+      border-radius: 8px;
+    }
+    .form-control::placeholder {
+      color: rgba(234, 246, 242, 0.6);
+    }
+    .form-control:focus {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #eaf6f2;
+    }
+    .btn-primary {
+      background: linear-gradient(90deg, #007bff, #0056b3);
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(90deg, #0056b3, #004085);
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #eaf6f2;
+      border-radius: 8px;
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .nav-tabs .nav-link {
+      background: transparent;
+      border: none;
+      color: rgba(234, 246, 242, 0.7);
+      border-bottom: 2px solid transparent;
+    }
+    .nav-tabs .nav-link.active {
+      color: #eaf6f2;
+      border-bottom-color: #007bff;
+    }
+    .nav-tabs .nav-link:hover {
+      color: #eaf6f2;
+    }
   </style>
 </head>
 <body>
@@ -327,13 +398,13 @@
       <ul class="navbar-links">
         <li><a class="active" href="index.html">Home</a></li>
         <li><a href="Pages/Movies.html">Movies</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="Pages/Contact.html">Contact</a></li>
       </ul>
     </div>
 
     <div class="navbar-right">
       <input id="globalSearch" name="search" class="form-control form-control-sm navbar-search" type="search" placeholder="Search movies" aria-label="Search">
-      <div class="navbar-profile">U</div>
+      <div class="navbar-profile" id="profileIcon" style="cursor:pointer;">U</div>
     </div>
   </nav>
 
@@ -607,6 +678,66 @@
   </div>
 </section>
 
+<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="authModalLabel">Welcome</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-tabs" id="authTabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab" aria-controls="login" aria-selected="true">Login</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="signup-tab" data-bs-toggle="tab" data-bs-target="#signup" type="button" role="tab" aria-controls="signup" aria-selected="false">Sign Up</button>
+          </li>
+        </ul>
+        <div class="tab-content mt-3" id="authTabsContent">
+          <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+            <form id="loginForm">
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email" required>
+              </div>
+              <div class="mb-3">
+                <label for="loginPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Login</button>
+            </form>
+          </div>
+          <div class="tab-pane fade" id="signup" role="tabpanel" aria-labelledby="signup-tab">
+            <form id="signupForm">
+              <div class="mb-3">
+                <label for="signupName" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="signupName" placeholder="Enter your full name" required>
+              </div>
+              <div class="mb-3">
+                <label for="signupEmail" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="signupEmail" placeholder="Enter your email" required>
+              </div>
+              <div class="mb-3">
+                <label for="signupPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="signupPassword" placeholder="Create a password" required>
+              </div>
+              <div class="mb-3">
+                <label for="signupConfirmPassword" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="signupConfirmPassword" placeholder="Confirm your password" required>
+              </div>
+              <button type="submit" class="btn btn-primary w-100">Sign Up</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- footer (sticky) -->
 <footer class="site-footer" aria-label="Site footer">
   <div class="footer-inner">
@@ -618,7 +749,37 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
+  function escapeHtml(s = '') {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '<')
+      .replace(/>/g, '>')
+      .replace(/"/g, '"')
+      .replace(/'/g, '&#39;');
+  }
+
+  document.addEventListener('DOMContentLoaded', async function () {
+    try {
+      const topRes = await window.MovieApi.tmdbGetTopRated({ page: 1 });
+      const movies = (topRes.movies || []).slice(0, 5);
+      const carouselInner = document.querySelector('#homeCarousel .carousel-inner');
+      carouselInner.innerHTML = '';
+      movies.forEach((movie, index) => {
+        const item = document.createElement('div');
+        item.className = 'carousel-item' + (index === 0 ? ' active' : '');
+        item.innerHTML = `
+          <div class="d-block w-100" style="height:60vh;background-image: url('${movie.poster || 'https://via.placeholder.com/1200x675?text=No+Image'}'); background-size: cover; background-position: center; position:relative;">
+            <div class="carousel-caption d-none d-md-block" style="position:absolute;bottom:20px;left:16px;right:16px;text-align:left;">
+              <h5 style="color:#fff;margin:0;font-weight:700">${escapeHtml(movie.title)}</h5>
+              <p style="color:rgba(255,255,255,0.85);margin:6px 0 0">${escapeHtml((movie.description || '').slice(0, 200))}</p>
+            </div>
+          </div>
+        `;
+        carouselInner.appendChild(item);
+      });
+    } catch (err) {
+      console.error('Failed to load top rated movies for carousel', err);
+    }
   });
 </script>
 
@@ -637,7 +798,7 @@
       const list = document.getElementById('movieList');
       const loadBtn = document.getElementById('loadMoreMovies');
       let page = 1;
-      const pageSize = 20; 
+      const pageSize = 20;
       let accumulated = [];
       let totalAvailable = Infinity;
       let loading = false;
@@ -649,7 +810,7 @@
         loadBtn.textContent = 'Loading...';
 
         try {
-        
+
           const res = await window.MovieApi.fetchMovies({ page, limit: pageSize });
           const movies = res.movies || [];
           // accumulate and render
@@ -677,7 +838,7 @@
 
       loadBtn.addEventListener('click', loadPage);
 
-      
+
       (async () => {
 
         await loadPage();
@@ -686,6 +847,77 @@
       })();
     });
   })();
+</script>
+
+<script>
+ 
+  document.addEventListener('DOMContentLoaded', function () {
+    const profileIcon = document.getElementById('profileIcon');
+    const authModal = new bootstrap.Modal(document.getElementById('authModal'));
+    const loginForm = document.getElementById('loginForm');
+    const signupForm = document.getElementById('signupForm');
+
+    profileIcon.addEventListener('click', function () {
+      authModal.show();
+    });
+
+  
+    loginForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+  
+      if (email && password) {
+    
+        localStorage.setItem('user', JSON.stringify({ email, name: email.split('@')[0] }));
+        updateProfileIcon();
+        authModal.hide();
+        alert('Login successful!');
+      } else {
+        alert('Please fill in all fields.');
+      }
+    });
+
+   
+    signupForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const confirmPassword = document.getElementById('signupConfirmPassword').value;
+
+     
+      if (name && email && password && confirmPassword) {
+        if (password === confirmPassword) {
+     
+          localStorage.setItem('user', JSON.stringify({ name, email }));
+          updateProfileIcon();
+          authModal.hide();
+          alert('Sign up successful!');
+        } else {
+          alert('Passwords do not match.');
+        }
+      } else {
+        alert('Please fill in all fields.');
+      }
+    });
+
+ 
+    function updateProfileIcon() {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user) {
+        profileIcon.textContent = user.name.charAt(0).toUpperCase();
+        profileIcon.title = `Logged in as ${user.name}`;
+      } else {
+        profileIcon.textContent = 'U';
+        profileIcon.title = 'Login/Signup';
+      }
+    }
+
+    
+    updateProfileIcon();
+  });
 </script>
 
 </body>
