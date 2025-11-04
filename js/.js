@@ -290,11 +290,11 @@ function debounce(fn, wait = 300) {
     };
 }
 
-// Attach default event handlers (call once on page load)
+
 function setupApiUI() {
     const searchInput = document.querySelector('#searchInput');
     const searchResults = document.querySelector('#moviesContainer');
-    const ratingModal = document.querySelector('#ratingModal'); // optional modal in your HTML
+    const ratingModal = document.querySelector('#ratingModal'); 
     const ratingForm = document.querySelector('#ratingForm');
 
     if (searchInput && searchResults) {
@@ -302,7 +302,7 @@ function setupApiUI() {
             const q = searchInput.value.trim();
             try {
                 const res = await fetchMovies({ query: q, page: 1, limit: 30 });
-                // expect res = { movies: [...], total, page }
+                
                 renderMovies(searchResults, res.movies || []);
             } catch (err) {
                 console.error('Search error', err);
@@ -332,7 +332,7 @@ function setupApiUI() {
                     alert('Failed to load movie detail.');
                 }
             } else if (action === 'rate') {
-                // open rating UI; set dataset for form
+              
                 if (ratingForm) {
                     ratingForm.dataset.movieId = movieId;
                     if (ratingModal) ratingModal.classList.add('open');
@@ -352,9 +352,8 @@ function setupApiUI() {
             try {
                 await submitRating(movieId, { score, review });
                 if (ratingModal) ratingModal.classList.remove('open');
-                // refresh movie list or detail
+              
                 if (searchResults) {
-                    // simple refresh current search
                     const q = searchInput ? searchInput.value.trim() : '';
                     const res = await fetchMovies({ query: q, page: 1, limit: 30 });
                     renderMovies(searchResults, res.movies || []);
